@@ -1,0 +1,67 @@
+<label>Billing Currency</label>
+<span class="right select" style="width: 175px; display: inline-block;">
+   <select name="cur" id="selects_3" [ngModel]="currencyType" (ngModelChange)="onChange($event)">
+      <option *ngFor="let cur of currencies" [value]="cur.value">
+         {{cur.display}}
+   </select>
+</span>
+
+<span *ngIf="errorMessage" class="alert alert-app-level alert-danger alert-sm alertBox">
+      <div class="alert-item static">
+         <div class="alert-text">
+            {{errorMessage}}
+         </div>
+      </div>
+   <button type="button" class="close" aria-label="Close" (click)=" errorMessage='' ">
+      <clr-icon aria-hidden="true" shape="close"></clr-icon>
+   </button>
+</span>
+<table class="table">
+   <thead>
+   <tr>
+      <th>Function ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>State</th>
+      <th>Memory Usage</th>
+      <th>Current Monthly Bill ({{currencyType}}</th>
+      <th>Status</th>
+      <th>Action</th>
+   </tr>
+   </thead>
+   <tbody>
+   <tr *ngFor="let status of enableFnsList  | sortBy: 'billingUsage'"  [ngClass]="{
+         'amber-alert': isAmberAlert(status.memoryUsage),
+         'red-alert': isRedAlert(status.memoryUsage)
+         } ">
+      <td>{{status.id}}</td>
+      <td>{{status.name}}</td>
+      <td>{{status.description}}</td>
+      <td>{{status.state}}</td>
+      <td>{{status.memoryUsage | vmwMemoryFormat}}</td>
+      <td>{{status.billingUsage | convertCurrency:currencyType:usd_eur:usd_gbp | currency:currencyType:'symbol-narrow': '1.4-4'}}</td>
+      <td> Enabled </td>
+      <td> <button class="fnBtn btn btn-sm btn-warning"
+                   [disabled]="status.id === clickedBtnId ? disableButton : '' "
+                   (click)="toggleFunctionStatus(status.id, status.enabled)"> Disable
+            </button>
+      </td>
+   </tr>
+   <tr *ngFor="let status of disableFnsList | sortBy: 'billingUsage'" class="disableFnRow" >
+      <td>{{status.id}}</td>
+      <td>{{status.name}}</td>
+      <td>{{status.description}}</td>
+      <td>{{status.state}}</td>
+      <td>{{status.memoryUsage | vmwMemoryFormat}}</td>
+      <td>{{status.billingUsage | convertCurrency:currencyType:usd_eur:usd_gbp | currency:currencyType:'symbol-narrow': '1.4-4'}}</td>
+      <td> Disabled </td>
+      <td> <button class="fnBtn btn btn-sm btn-success"
+                   [disabled]="status.id === clickedBtnId ? disableButton : '' "
+                   (click)="toggleFunctionStatus(status.id, status.enabled)">Enable
+      </button>
+      </td>
+   </tr>
+
+   </tbody>
+</table>
+
