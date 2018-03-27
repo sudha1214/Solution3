@@ -70,7 +70,7 @@ export class SolutionComponent implements OnInit {
       }, error => {
           console.log(error);
           this.errorMessage = 'Defaulting to currency type USD, as HankerRank only supports HTTPs requests,' +
-              ' which are currently not available with free subscription of fixer users. Please run this app locally, ' +
+              ' not available with free subscription of fixer.io. Please run this app locally, ' +
               'to see the working example.';
           this.currencyType = 'USD';
       });
